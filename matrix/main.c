@@ -1,40 +1,38 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include <math.h>
-
-//定义一个bool类型（C里面需要）
-typedef enum { False = 0, True = 1 }Bool;
+#include <stdbool.h>
 
 //定义一个结构体，用来表示一个二维的矩阵
-typedef struct Matrix
+typedef struct 
 {
 	int row;
 	int column;
 	double *data;//用来存放矩阵的元素
-};
+}Matrix;
 
 /************************************************************************
 函数功能：初始化一个矩阵
 输入：要初始化的矩阵matrix、矩阵的行row、矩阵的列column
-输出：初始化成功：True；初始化失败：False
+输出：初始化成功：true；初始化失败：false
 ************************************************************************/
-Bool InitMatrix(Matrix *matrix, int row, int column)
+bool InitMatrix(Matrix *matrix, int row, int column)
 {
 	int matrix_size = row*column*sizeof(double);
 	if (matrix_size <= 0)
-		return False;
+		return false;
 	matrix->data = (double*)malloc(matrix_size);//给矩阵分配空间
 	if (matrix->data)
 	{
 		matrix->row = row;
 		matrix->column = column;
-		return True;
+		return true;
 	}
 	else
 	{
 		matrix->row = 0;
 		matrix->column = 0;
-		return False;
+		return false;
 	}
 }
 
@@ -80,15 +78,15 @@ void SetMatrixZeros(Matrix *matrix)
 /************************************************************************
 函数功能：判断一个矩阵是否为空
 输入：一个矩阵matrix
-输出：为空则True，否则为False
+输出：为空则true，否则为false
 ************************************************************************/
-Bool IsNullMatrix(Matrix *matrix)
+bool IsNullMatrix(Matrix *matrix)
 {
 	int matrix_num =GetMatrixSize(matrix);
 	if ((matrix_num <= 0) || (matrix->data == NULL))
-		return True;
+		return true;
 	else
-		return False;
+		return false;
 }
 
 /************************************************************************
@@ -221,9 +219,9 @@ void QR(Matrix *A, Matrix *Q, Matrix *R)
 /************************************************************************
 函数功能：给特征值排序，当flag=1时，则升序，当flag=0，则降序
 输入：需要排序的序列eValue，升序还是降序的选择flag
-输出：排序成功则返回True，否则返回False
+输出：排序成功则返回true，否则返回false
 ************************************************************************/
-Bool SortEigenValues(Matrix *eValue, int flag)
+bool SortEigenValues(Matrix *eValue, int flag)
 {
 	int size = GetMatrixSize(eValue);
 
@@ -247,7 +245,7 @@ Bool SortEigenValues(Matrix *eValue, int flag)
 				}
 			}
 			else
-				return False;
+				return false;
 		}
 		if (k != i)
 		{
@@ -257,18 +255,18 @@ Bool SortEigenValues(Matrix *eValue, int flag)
 			eValue->data[k] = temp;
 		}
 	}
-	return True;
+	return true;
 }
 
 /************************************************************************
 函数功能：计算两个矩阵相乘C=A*B
 输入：用来存计算结果的矩阵C、需要进行乘法计算的两个矩阵A和B
-输出：计算成功则输出True，失败则False
+输出：计算成功则输出true，失败则false
 ************************************************************************/
-Bool MatrixMulMatrix(Matrix *C, Matrix *A, Matrix *B)
+bool MatrixMulMatrix(Matrix *C, Matrix *A, Matrix *B)
 {
 	if ((IsNullMatrix(A)) || (IsNullMatrix(B)))
-		return False;
+		return false;
 
 	int A_col = A->column;
 	int B_row = B->row;
@@ -278,7 +276,7 @@ Bool MatrixMulMatrix(Matrix *C, Matrix *A, Matrix *B)
 	if (A_col != B_row)
 	{
 		printf("A_col!=B_row!");
-		return False;
+		return false;
 	}
 
 	for (int i = 0; i < A->row; i++)
@@ -290,10 +288,8 @@ Bool MatrixMulMatrix(Matrix *C, Matrix *A, Matrix *B)
 		}
 	}
 
-	return True;
+	return true;
 }
-
-
 
 /************************************************************************
 函数功能：已知一个矩阵的特征值求对应的特征向量
